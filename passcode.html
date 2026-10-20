@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Enter passcode</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="titlebar"><span>Secret</span> Birthday Gift</header>
+    <section class="screen passcode-screen active">
+      <div class="portrait"><div class="cartoon">🎂</div><span>HAPPY<br>BIRTHDAY</span></div>
+      <div class="passcode-panel">
+        <h1>Enter a passcode</h1>
+        <p>Enter the 4-digit secret passcode 💌</p>
+        <div class="dots" id="dots"><i></i><i></i><i></i><i></i></div>
+        <div class="keypad">
+          <button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button>
+          <button data-key="4">4</button><button data-key="5">5</button><button data-key="6">6</button>
+          <button data-key="7">7</button><button data-key="8">8</button><button data-key="9">9</button>
+          <button id="clear">⌫</button><button data-key="0">0</button><button id="submit">♥</button>
+        </div>
+        <p class="error" id="error"></p>
+      </div>
+    </section>
+    <footer>Made with ❤️ for Himanshu</footer>
+  </main>
+  <script>
+    sessionStorage.removeItem("birthday-surprise-unlocked");
+    let code = "";
+    const dots = document.querySelectorAll("#dots i");
+    const error = document.querySelector("#error");
+
+    function render() {
+      dots.forEach((dot, index) => dot.classList.toggle("filled", index < code.length));
+    }
+
+    function check() {
+      if (code === "2004") {
+        sessionStorage.setItem("birthday-surprise-unlocked", "true");
+        location.href = "surprise-1.html";
+      } else if (code.length === 4) {
+        error.textContent = "Oops! Try again ❤️";
+        setTimeout(() => {
+          code = "";
+          error.textContent = "";
+          render();
+        }, 600);
+      }
+    }
+
+    document.querySelectorAll("[data-key]").forEach(button => {
+      button.onclick = () => {
+        if (code.length < 4) {
+          code += button.dataset.key;
+          render();
+          if (code.length === 4) check();
+        }
+      };
+    });
+    document.querySelector("#clear").onclick = () => {
+      code = code.slice(0, -1);
+      render();
+    };
+    document.querySelector("#submit").onclick = check;
+  </script>
+</body>
+</html>
